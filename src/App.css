@@ -24,3 +24,10 @@
     font-size: 70px;
     text-transform: uppercase;
 }
+.space-button:disabled {
+    color: black;
+}
+.space-button:focus {
+    outline: 6px dotted #008a00;
+    outline-offset: 2px;
+}

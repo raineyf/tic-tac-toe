@@ -7,12 +7,24 @@ function Board() {
         ["", "", ""],
         ["", "", ""],
     ]);
+    const [player, setPlayer] = useState("x");
+    const togglePlayer = () => {
+        if (player == "x") {
+            setPlayer("o");
+        } else {
+            setPlayer("x");
+        }
+    };
+    const populateSpace = (y, x, player) => {
+        const newBoard = [...board];
+        newBoard[y][x] = player;
+        setBoard(newBoard);
+    };
     const handleSpaceClick = (e) => {
         const y = e.target.getAttribute("y");
         const x = e.target.getAttribute("x");
-        const newBoard = [...board];
-        newBoard[y][x] = "x";
-        setBoard(newBoard);
+        populateSpace(y, x, player);
+        togglePlayer();
     };
     return (
         <div className="board">
@@ -26,6 +38,7 @@ function Board() {
                                 y={y}
                                 onClick={handleSpaceClick}
                                 value={board[y][x]}
+                                disabled={board[y][x] == "" ? false : true}
                             />
                         ))}
                     </div>

@@ -8,6 +8,7 @@ function BoardSpace(props) {
             onClick={props.onClick}
             x={props.x}
             y={props.y}
+            disabled={props.disabled}
         >
             {props.value}
         </button>
