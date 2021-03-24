@@ -31,3 +31,36 @@
     outline: 6px dotted #008a00;
     outline-offset: 2px;
 }
+h1 {
+    text-align: center;
+    margin: 1rem auto;
+}
+.player-select-copy {
+    text-align: center;
+    margin: 0.5rem auto;
+}
+.btn-container {
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+    max-width: calc(100% - 20px);
+    margin: 0.5rem auto 1rem;
+}
+.btn-container button {
+    height: 60px;
+    width: 130px;
+    max-width: calc(50% - 20px);
+    border: 1px solid black;
+    border-radius: 5px;
+    background: transparent;
+}
+.btn-container button:hover:not(:disabled) {
+    background: black;
+    color: white;
+    cursor: pointer;
+}
+.btn-container button.selected {
+    background: black;
+    color: white;
+    cursor: pointer;
+}
