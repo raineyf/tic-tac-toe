@@ -64,3 +64,24 @@ h1 {
     color: white;
     cursor: pointer;
 }
+.game-result {
+    text-align: center;
+    margin: 1rem auto;
+    text-transform: uppercase;
+    font-size: 2rem;
+}
+.reload-button {
+    height: 60px;
+    width: 130px;
+    max-width: calc(50% - 20px);
+    border: 1px solid black;
+    border-radius: 5px;
+    background: transparent;
+    margin: 0 auto;
+    display: block;
+}
+.reload-button:hover {
+    background: black;
+    color: white;
+    cursor: pointer;
+}
