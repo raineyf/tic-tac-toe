@@ -80,16 +80,19 @@ function Board(props) {
         };
         const winner = checkWinner();
         if (currentPlayer === cpu && winner === "") {
-            const randomSpace =
-                availableSpaces[
-                    Math.floor(Math.random() * availableSpaces.length)
-                ];
-            if (randomSpace) {
-                const newBoard = [...board];
-                newBoard[randomSpace.y][randomSpace.x] = cpu;
-                setBoard(newBoard);
-                setCurrentPlayer(human);
+            let bestMove = {};
+            if (board[1][1] === "") {
+                bestMove = { x: 1, y: 1 };
+            } else {
+                bestMove =
+                    availableSpaces[
+                        Math.floor(Math.random() * availableSpaces.length)
+                    ];
             }
+            const newBoard = [...board];
+            newBoard[bestMove.y][bestMove.x] = cpu;
+            setBoard(newBoard);
+            setCurrentPlayer(human);
         } else if (winner !== "") {
             setGameResult(winner);
         }
@@ -120,7 +123,7 @@ function Board(props) {
             {gameResult === "x" && (
                 <div className="game-result">{gameResult} wins!</div>
             )}
-            {gameResult === "y" && (
+            {gameResult === "o" && (
                 <div className="game-result">{gameResult} wins!</div>
             )}
             {gameResult !== "" && (
