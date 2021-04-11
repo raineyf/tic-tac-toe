@@ -110,7 +110,11 @@ function Board(props) {
                                     y={y}
                                     onClick={handleSpaceClick}
                                     value={board[y][x]}
-                                    disabled={board[y][x] === "" ? false : true}
+                                    disabled={
+                                        board[y][x] === "" && gameResult === ""
+                                            ? false
+                                            : true
+                                    }
                                 />
                             ))}
                         </div>
