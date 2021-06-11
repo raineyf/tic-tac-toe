@@ -17,8 +17,8 @@ function Board(props) {
             const x = e.target.getAttribute("x");
             const newBoard = [...board];
             newBoard[y][x] = human;
-            setBoard(newBoard);
             setCurrentPlayer(cpu);
+            setBoard(newBoard);
         }
     };
     const handleReloadClick = () => {
@@ -27,7 +27,7 @@ function Board(props) {
     useEffect(() => {
         const cpu = props.cpu;
         const human = props.human;
-        const availableSpace = () => {
+        const availableSpace = (board) => {
             let availableSpaces = [];
             for (let y = 0; y < board.length; y++) {
                 for (let x = 0; x < board.length; x++) {
@@ -38,9 +38,9 @@ function Board(props) {
             }
             return availableSpaces;
         };
-        const availableSpaces = availableSpace();
-        const checkWinner = () => {
-            let winner = "";
+        const availableSpaces = availableSpace(board);
+        const checkWinner = (board) => {
+            let winner = null;
             for (let y = 0; y < board.length; y++) {
                 if (
                     board[y][0] === board[y][1] &&
@@ -73,27 +73,78 @@ function Board(props) {
             ) {
                 winner = board[2][0];
             }
-            if (availableSpaces.length === 0 && winner === "") {
+            if (availableSpaces.length === 0 && winner === null) {
                 winner = "Draw";
             }
             return winner;
         };
-        const winner = checkWinner();
-        if (currentPlayer === cpu && winner === "") {
+        const winner = checkWinner(board);
+        if (currentPlayer === cpu && winner === null) {
             let bestMove = {};
             if (board[1][1] === "") {
                 bestMove = { x: 1, y: 1 };
             } else {
-                bestMove =
-                    availableSpaces[
-                        Math.floor(Math.random() * availableSpaces.length)
-                    ];
+                const minimax = (board, depth, isMaximizing) => {
+                    let scores =
+                        cpu === "x"
+                            ? {
+                                  x: 10,
+                                  o: -10,
+                                  tie: 0,
+                              }
+                            : {
+                                  o: 10,
+                                  x: -10,
+                                  tie: 0,
+                              };
+                    let result = checkWinner(board);
+                    const availableSpaces = availableSpace(board);
+                    if (result !== null) {
+                        return scores[result];
+                    }
+                    if (isMaximizing) {
+                        let bestScore = -Infinity;
+                        availableSpaces.forEach((space) => {
+                            board[space.y][space.x] = cpu;
+                            let score = minimax(board, depth + 1, false);
+                            board[space.y][space.x] = "";
+                            bestScore = Math.max(score, bestScore);
+                        });
+                        return bestScore;
+                    } else {
+                        let bestScore = Infinity;
+                        availableSpaces.forEach((space) => {
+                            board[space.y][space.x] = human;
+                            let score = minimax(board, depth + 1, true);
+                            board[space.y][space.x] = "";
+                            bestScore = Math.min(score, bestScore);
+                        });
+                        return bestScore;
+                    }
+                };
+                const determineMove = () => {
+                    let bestScore = -Infinity;
+                    let move = {};
+                    availableSpaces.forEach((space) => {
+                        let virtualBoard = [...board];
+                        virtualBoard[space.y][space.x] = cpu;
+                        let score = minimax(virtualBoard, 0, false);
+                        virtualBoard[space.y][space.x] = "";
+                        if (score > bestScore) {
+                            bestScore = score;
+                            move.x = space.x;
+                            move.y = space.y;
+                        }
+                    });
+                    return move;
+                };
+                bestMove = determineMove();
             }
             const newBoard = [...board];
             newBoard[bestMove.y][bestMove.x] = cpu;
             setBoard(newBoard);
             setCurrentPlayer(human);
-        } else if (winner !== "") {
+        } else if (winner !== null) {
             setGameResult(winner);
         }
     }, [currentPlayer, board, props.cpu, props.human]);
